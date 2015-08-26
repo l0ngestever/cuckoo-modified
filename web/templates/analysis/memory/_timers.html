@@ -1,24 +1,67 @@
 <table class="table table-bordered" style="table-layout: fixed;">
     <thead>
         <tr>
-            <th>Offset</th>
-            <th>Due Time</th>
-            <th>Period</th>
-            <th>Signaled</th>
-            <th>Routine</th>
-            <th>Module</th>
+          <th>Offset</th>
+          <th>Due Time</th>
+          <th>Period</th>
+          <th>Signaled</th>
+          <th>Routine</th>
+          <th>Module</th>
         </tr>
     </thead>
     <tbody>
-    {% for x in analysis.memory.timers.data %}
-        <tr>
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="6">Analysis vs. Baseline</th>
+      	</tr>
+        {% for x in analysis.memory.timers.data %}
+  		    <tr>
+              {% if x in baseline.timers.data %}
+                  <td class="active"><span class="mono">{{x.offset}}</span></td>
+                  <td class="active">{{x.due_time}}</td>
+                  <td class="active">{{x.period}}</td>
+                  <td class="active">{{x.signaled}}</td>
+                  <td class="active"><span class="mono">{{x.routine}}</span></td>
+                  <td class="active">{{x.module}}</span></td>
+              {% else %}
+                  <td class="success"><span class="mono">{{x.offset}}</span></td>
+                  <td class="success">{{x.due_time}}</td>
+                  <td class="success">{{x.period}}</td>
+                  <td class="success">{{x.signaled}}</td>
+                  <td class="success"><span class="mono">{{x.routine}}</span></td>
+                  <td class="success">{{x.module}}</span></td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="6">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for x in baseline.timers.data %}
+            {% if not x in analysis.memory.timers.data %}
+            	<tr>
+                <td class="danger"><span class="mono">{{x.offset}}</span></td>
+                <td class="danger">{{x.due_time}}</td>
+                <td class="danger">{{x.period}}</td>
+                <td class="danger">{{x.signaled}}</td>
+                <td class="danger"><span class="mono">{{x.routine}}</span></td>
+                <td class="danger">{{x.module}}</span></td>
+              </tr>
+  	        {% endif %}
+      	{% endfor %}
+      {% else %}
+        {% for x in analysis.memory.timers.data %}
+          <tr>
             <td><span class="mono">{{x.offset}}</span></td>
             <td>{{x.due_time}}</td>
             <td>{{x.period}}</td>
             <td>{{x.signaled}}</td>
             <td><span class="mono">{{x.routine}}</span></td>
             <td>{{x.module}}</span></td>
-        </tr>
-    {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

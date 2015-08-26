@@ -1,20 +1,57 @@
 <table class="table table-bordered" style="table-layout: fixed;">
     <thead>
         <tr>
-            <th>Type</th>
-            <th>Callback</th>
-            <th>Module</th>
-            <th>Details</th>
+          <th>Type</th>
+          <th>Callback</th>
+          <th>Module</th>
+          <th>Details</th>
         </tr>
     </thead>
     <tbody>
-    {% for x in analysis.memory.callbacks.data %}
-        <tr>
-            <td>{{x.type}}</td>
-            <td><span class="mono">{{x.callback}}</span></td>
-            <td>{{x.module}}</td>
-            <td>{{x.details}}</td>
-        </tr>
-    {% endfor %}
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="4">Analysis vs. Baseline</th>
+      	</tr>
+        {% for x in analysis.memory.callbacks.data %}
+  		    <tr>
+              {% if x in baseline.callbacks.data %}
+                  <td class="active">{{x.type}}</td>
+                  <td class="active"><span class="mono">{{x.callback}}</span></td>
+                  <td class="active">{{x.module}}</td>
+                  <td class="active">{{x.details}}</td>
+              {% else %}
+                  <td class="success">{{x.type}}</td>
+                  <td class="success"><span class="mono">{{x.callback}}</span></td>
+                  <td class="success">{{x.module}}</td>
+                  <td class="success">{{x.details}}</td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="4">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for x in baseline.callbacks.data %}
+          {% if not x in analysis.memory.callbacks.data %}
+            <tr>
+              <td class="danger">{{x.type}}</td>
+              <td class="danger"><span class="mono">{{x.callback}}</span></td>
+              <td class="danger">{{x.module}}</td>
+              <td class="danger">{{x.details}}</td>
+            </tr>
+	        {% endif %}
+      	{% endfor %}
+      {% else %}
+        {% for x in analysis.memory.callbacks.data %}
+          <tr>
+              <td>{{x.type}}</td>
+              <td><span class="mono">{{x.callback}}</span></td>
+              <td>{{x.module}}</td>
+              <td>{{x.details}}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

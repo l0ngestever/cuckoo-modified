@@ -12,17 +12,64 @@
         </tr>
     </thead>
     <tbody>
-    {% for x in analysis.memory.messagehooks.data %}
+        {% if baseline %}
         <tr>
-            <td><span class="mono">{{x.offset}}</span></td>
-            <td>{{x.session}}</td>
-            <td>{{x.desktop}}</td>
-            <td>{{x.thread}}</td>
-            <td>{{x.filter}}</td>
-            <td>{{x.flags}}</td>
-            <td><span class="mono">{{x.function}}</span></td>
-            <td>{{x.module}}</span></td>
+            <th class="info" colspan="8">Analysis vs. Baseline</th>
         </tr>
-    {% endfor %}
+        {% for x in analysis.memory.messagehooks.data %}
+            <tr>
+                {% if x in baseline.messagehooks.data %}
+                    <td class="active"><span class="mono">{{x.offset}}</span></td>
+                    <td class="active">{{x.session}}</td>
+                    <td class="active">{{x.desktop}}</td>
+                    <td class="active">{{x.thread}}</td>
+                    <td class="active">{{x.filter}}</td>
+                    <td class="active">{{x.flags}}</td>
+                    <td class="active"><span class="mono">{{x.function}}</span></td>
+                    <td class="active">{{x.module}}</span></td>
+                {% else %}
+                    <td class="success"><span class="mono">{{x.offset}}</span></td>
+                    <td class="success">{{x.session}}</td>
+                    <td class="success">{{x.desktop}}</td>
+                    <td class="success">{{x.thread}}</td>
+                    <td class="success">{{x.filter}}</td>
+                    <td class="success">{{x.flags}}</td>
+                    <td class="success"><span class="mono">{{x.function}}</span></td>
+                    <td class="success">{{x.module}}</span></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            <tr>
+      		    <th class="info" colspan="8">Baseline vs. Analysis</th>
+      	    </tr>
+            {% for x in analysis.memory.messagehooks.data %}
+                {% if not x in analysis.memory.messagehooks.data %}
+                  <tr>
+                      <td class="success"><span class="mono">{{x.offset}}</span></td>
+                      <td class="success">{{x.session}}</td>
+                      <td class="success">{{x.desktop}}</td>
+                      <td class="success">{{x.thread}}</td>
+                      <td class="success">{{x.filter}}</td>
+                      <td class="success">{{x.flags}}</td>
+                      <td class="success"><span class="mono">{{x.function}}</span></td>
+                      <td class="success">{{x.module}}</span></td>
+                  </tr>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% for x in analysis.memory.messagehooks.data %}
+                <tr>
+                    <td class="success"><span class="mono">{{x.offset}}</span></td>
+                    <td class="success">{{x.session}}</td>
+                    <td class="success">{{x.desktop}}</td>
+                    <td class="success">{{x.thread}}</td>
+                    <td class="success">{{x.filter}}</td>
+                    <td class="success">{{x.flags}}</td>
+                    <td class="success"><span class="mono">{{x.function}}</span></td>
+                    <td class="success">{{x.module}}</span></td>
+                </tr>
+            {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

@@ -423,6 +423,19 @@ def report(request, task_id):
         # Extract out data for Admin tab in the analysis page
         esdata = {"index": query["_index"], "id": query["_id"]}
         report["es"] = esdata
+
+    # Baseline support
+    label = report['info']['machine']['label']
+    baseline = None
+    if label:
+        try:
+			with open(os.path.join(CUCKOO_ROOT, 'storage', 'baseline', label + '.json')) as jsonfile:
+				baseline = json.load(jsonfile)
+        except:
+            pass
+
+    print "DEBUG SHOW LABEL: " + label
+
     if not report:
         return render_to_response("error.html",
                                   {"error": "The specified analysis does not exist"},
@@ -474,6 +487,7 @@ def report(request, task_id):
 
     return render_to_response("analysis/report.html",
                              {"analysis": report,
+                              "baseline": baseline,
                               "domainlookups": domainlookups,
                               "iplookups": iplookups,
                               "similar": similarinfo,

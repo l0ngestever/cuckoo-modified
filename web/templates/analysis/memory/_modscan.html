@@ -9,14 +9,54 @@
         </tr>
     </thead>
     <tbody>
-    {% for mod in analysis.memory.modscan.data %}
-        <tr>
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="5">Analysis vs. Baseline</th>
+      	</tr>
+        {% for mod in analysis.memory.modscan.data %}
+  		    <tr>
+              {% if mod in baseline.modscan.data %}
+                  <td class="active"><span class="mono">{{mod.kernel_module_base}}</span></td>
+                  <td class="active"><span class="mono">{{mod.kernel_module_offset}}</span></td>
+                  <td class="active">{{mod.kernel_module_name}}</td>
+                  <td class="active">{{mod.kernel_module_file}}</td>
+                  <td class="active">{{mod.kernel_module_size}}</td>
+              {% else %}
+                  <td class="success"><span class="mono">{{mod.kernel_module_base}}</span></td>
+                  <td class="success"><span class="mono">{{mod.kernel_module_offset}}</span></td>
+                  <td class="success">{{mod.kernel_module_name}}</td>
+                  <td class="success">{{mod.kernel_module_file}}</td>
+                  <td class="success">{{mod.kernel_module_size}}</td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="5">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for mod in baseline.modscan.data %}
+            {% if not mod in analysis.memory.modscan.data %}
+            	<tr>
+                <td class="danger"><span class="mono">{{mod.kernel_module_base}}</span></td>
+                <td class="danger"><span class="mono">{{mod.kernel_module_offset}}</span></td>
+                <td class="danger">{{mod.kernel_module_name}}</td>
+                <td class="danger">{{mod.kernel_module_file}}</td>
+                <td class="danger">{{mod.kernel_module_size}}</td>
+              </tr>
+  	        {% endif %}
+      	{% endfor %}
+      {% else %}
+        {% for mod in analysis.memory.modscan.data %}
+          <tr>
             <td><span class="mono">{{mod.kernel_module_base}}</span></td>
             <td><span class="mono">{{mod.kernel_module_offset}}</span></td>
             <td>{{mod.kernel_module_name}}</td>
             <td>{{mod.kernel_module_file}}</td>
             <td>{{mod.kernel_module_size}}</td>
-        </tr>
-    {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

@@ -9,14 +9,51 @@
         </tr>
     </thead>
     <tbody>
-    {% for hook in analysis.memory.apihooks.data %}
+    {% if baseline %}
         <tr>
-            <td>{{hook.process_id}}</td>
-            <td>{{hook.process_name}}</td>
-            <td>{{hook.victim_function}}</td>
-            <td>{{hook.hook_type}}</td>
-            <td>{{hook.hooking_module}}</td>
+            <th class="info" colspan="8">Analysis vs. Baseline</th>
         </tr>
-    {% endfor %}
+        {% for hook in analysis.memory.apihooks.data %}
+            <tr>
+                {% if hook in baseline.memory.apihooks.data %}
+                    <td class="active">{{hook.process_id}}</td>
+                    <td class="active">{{hook.process_name}}</td>
+                    <td class="active">{{hook.victim_function}}</td>
+                    <td class="active">{{hook.hook_type}}</td>
+                    <td class="active">{{hook.hooking_module}}</td>
+                {% else %}
+                    <td class="success">{{hook.process_id}}</td>
+                    <td class="success">{{hook.process_name}}</td>
+                    <td class="success">{{hook.victim_function}}</td>
+                    <td class="success">{{hook.hook_type}}</td>
+                    <td class="success">{{hook.hooking_module}}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+      	<tr>
+      		<th class="info" colspan="8">Baseline vs. Analysis</th>
+      	</tr>
+        {% for hook in analysis.memory.apihooks.data %}
+                {% if not hook in baseline.memory.apihooks.data %}
+                    <tr>
+                    <td class="danger">{{hook.process_id}}</td>
+                    <td class="danger">{{hook.process_name}}</td>
+                    <td class="danger">{{hook.victim_function}}</td>
+                    <td class="danger">{{hook.hook_type}}</td>
+                    <td class="danger">{{hook.hooking_module}}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+    {% else %}
+        {% for hook in analysis.memory.apihooks.data %}
+          <tr>
+              <td class="danger">{{hook.process_id}}</td>
+              <td class="danger">{{hook.process_name}}</td>
+              <td class="danger">{{hook.victim_function}}</td>
+              <td class="danger">{{hook.hook_type}}</td>
+              <td class="danger">{{hook.hooking_module}}</td>
+          </tr>
+        {% endfor %}
+    {% endif %}
     </tbody>
 </table>

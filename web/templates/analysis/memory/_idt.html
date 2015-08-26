@@ -10,15 +10,58 @@
         </tr>
     </thead>
     <tbody>
-    {% for x in analysis.memory.idt.data %}
-        <tr>
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="6">Analysis vs. Baseline</th>
+      	</tr>
+        {% for x in analysis.memory.idt.data %}
+  		    <tr>
+              {% if x in baseline.idt.data %}
+                  <td class="active">{{x.cpu_number}}</td>
+                  <td class="active">{{x.index}}</td>
+                  <td class="active"><span class="mono">{{x.selector}}</span></td>
+                  <td class="active"><span class="mono">{{x.address}}</span></td>
+                  <td class="active">{{x.module}}</td>
+                  <td class="active">{{x.section}}</td>
+              {% else %}
+                  <td class="success">{{x.cpu_number}}</td>
+                  <td class="success">{{x.index}}</td>
+                  <td class="success"><span class="mono">{{x.selector}}</span></td>
+                  <td class="success"><span class="mono">{{x.address}}</span></td>
+                  <td class="success">{{x.module}}</td>
+                  <td class="success">{{x.section}}</td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="6">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for x in baseline.idt.data %}
+            {% if not x in analysis.memory.idt.data %}
+              <tr>
+                <td class="danger">{{x.cpu_number}}</td>
+                <td class="danger">{{x.index}}</td>
+                <td class="danger"><span class="mono">{{x.selector}}</span></td>
+                <td class="danger"><span class="mono">{{x.address}}</span></td>
+                <td class="danger">{{x.module}}</td>
+                <td class="danger">{{x.section}}</td>
+              </tr>
+  	        {% endif %}
+      	{% endfor %}
+      {% else %}
+        {% for x in analysis.memory.idt.data %}
+          <tr>
             <td>{{x.cpu_number}}</td>
             <td>{{x.index}}</td>
             <td><span class="mono">{{x.selector}}</span></td>
             <td><span class="mono">{{x.address}}</span></td>
             <td>{{x.module}}</td>
             <td>{{x.section}}</td>
-        </tr>
-    {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

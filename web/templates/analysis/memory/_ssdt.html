@@ -11,8 +11,52 @@
         </tr>
     </thead>
     <tbody>
-    {% for x in analysis.memory.ssdt.data %}
-        <tr>
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="7">Analysis vs. Baseline</th>
+      	</tr>
+        {% for x in analysis.memory.ssdt.data %}
+  		    <tr>
+              {% if x in baseline.ssdt.data %}
+                  <td class="active">{{x.index}}</td>
+                  <td class="active"><span class="mono">{{x.table}}</span></td>
+                  <td class="active">{{x.entry}}</td>
+                  <td class="active">{{x.syscall_name}}</td>
+                  <td class="active"><span class="mono">{{x.syscall_addr}}</span></td>
+                  <td class="active">{{x.syscall_modname}}</span></td>
+                  <td class="active">{{x.hook_dest_addr}}: {{x.hook_name}}</td>
+              {% else %}
+                  <td class="success">{{x.index}}</td>
+                  <td class="success"><span class="mono">{{x.table}}</span></td>
+                  <td class="success">{{x.entry}}</td>
+                  <td class="success">{{x.syscall_name}}</td>
+                  <td class="success"><span class="mono">{{x.syscall_addr}}</span></td>
+                  <td class="success">{{x.syscall_modname}}</span></td>
+                  <td class="success">{{x.hook_dest_addr}}: {{x.hook_name}}</td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="7">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for x in baseline.ssdt.data %}
+            {% if not x in analysis.memory.ssdt.data %}
+            	<tr>
+                <td class="danger">{{x.index}}</td>
+                <td class="danger"><span class="mono">{{x.table}}</span></td>
+                <td class="danger">{{x.entry}}</td>
+                <td class="danger">{{x.syscall_name}}</td>
+                <td class="danger"><span class="mono">{{x.syscall_addr}}</span></td>
+                <td class="danger">{{x.syscall_modname}}</span></td>
+                <td class="danger">{{x.hook_dest_addr}}: {{x.hook_name}}</td>
+              </tr>
+  	        {% endif %}
+      	{% endfor %}
+      {% else %}
+        {% for x in analysis.memory.ssdt.data %}
+          <tr>
             <td>{{x.index}}</td>
             <td><span class="mono">{{x.table}}</span></td>
             <td>{{x.entry}}</td>
@@ -20,7 +64,9 @@
             <td><span class="mono">{{x.syscall_addr}}</span></td>
             <td>{{x.syscall_modname}}</span></td>
             <td>{{x.hook_dest_addr}}: {{x.hook_name}}</td>
-        </tr>
-    {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

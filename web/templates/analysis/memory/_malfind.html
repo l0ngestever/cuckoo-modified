@@ -1,20 +1,57 @@
 <table class="table table-bordered" style="table-layout: fixed;">
     <thead>
         <tr>
-            <th>PID</th>
-            <th>Process Name</th>
-            <th>Start</th>
-            <th>Tag</th>
+          <th>PID</th>
+          <th>Process Name</th>
+          <th>Start</th>
+          <th>Tag</th>
         </tr>
     </thead>
     <tbody>
-    {% for mal in analysis.memory.malfind.data %}
-        <tr>
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="4">Analysis vs. Baseline</th>
+      	</tr>
+        {% for mal in analysis.memory.malfind.data %}
+  		    <tr>
+              {% if mal in baseline.malfind.data %}
+                  <td class="active">{{mal.process_id}}</td>
+                  <td class="active">{{mal.process_name}}</td>
+                  <td class="active"><span class="mono">{{mal.vad_start}}</span></td>
+                  <td class="active">{{mal.vad_tag}}</td>
+              {% else %}
+                  <td class="success">{{mal.process_id}}</td>
+                  <td class="success">{{mal.process_name}}</td>
+                  <td class="success"><span class="mono">{{mal.vad_start}}</span></td>
+                  <td class="success">{{mal.vad_tag}}</td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="4">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for mal in baseline.malfind.data %}
+            {% if not mal in analysis.memory.malfind.data %}
+            	<tr>
+                <td class="danger">{{mal.process_id}}</td>
+                <td class="danger">{{mal.process_name}}</td>
+                <td class="danger"><span class="mono">{{mal.vad_start}}</span></td>
+                <td class="danger">{{mal.vad_tag}}</td>
+              </tr>
+  	        {% endif %}
+      	{% endfor %}
+      {% else %}
+        {% for mal in analysis.memory.malfind.data %}
+          <tr>
             <td>{{mal.process_id}}</td>
             <td>{{mal.process_name}}</td>
             <td><span class="mono">{{mal.vad_start}}</span></td>
             <td>{{mal.vad_tag}}</td>
-        </tr>
-    {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

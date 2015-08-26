@@ -11,16 +11,59 @@
         </tr>
     </thead>
     <tbody>
-    {% for sock in analysis.memory.netscan.data %}
+    {% if baseline %}
+      	<tr>
+      		<th class="info" colspan="7">Analysis vs. Baseline</th>
+      	</tr>
+        {% for sock in analysis.memory.netscan.data %}
+            <tr>
+                {% if process in baseline.netscan.data %}
+                    <td class="active">{{sock.offset}}</td>
+                    <td class="active">{{sock.process_id}}</td>
+                    <td class="active">{{sock.local_address}}</td>
+                    <td class="active">{{sock.local_port}}</td>
+                    <td class="active">{{sock.remote_address}}</td>
+                    <td class="active">{{sock.remote_port}}</td>
+                    <td class="active">{{sock.protocol}}</td>
+                {% else %}
+                    <td class="success">{{sock.offset}}</td>
+                    <td class="success">{{sock.process_id}}</td>
+                    <td class="success">{{sock.local_address}}</td>
+                    <td class="success">{{sock.local_port}}</td>
+                    <td class="success">{{sock.remote_address}}</td>
+                    <td class="success">{{sock.remote_port}}</td>
+                    <td class="success">{{sock.protocol}}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
         <tr>
-            <td>{{sock.offset}}</td>
-            <td>{{sock.process_id}}</td>
-            <td>{{sock.local_address}}</td>
-            <td>{{sock.local_port}}</td>
-            <td>{{sock.remote_address}}</td>
-            <td>{{sock.remote_port}}</td>
-            <td>{{sock.protocol}}</td>
-        </tr>
-    {% endfor %}
+      		<th class="info" colspan="7">Baseline vs. Analysis</th>
+      	</tr>
+        {% for sock in baseline.netscan.data %}
+            {% if not sock in analysis.memory.netscan.data %}
+                <tr>
+                    <td class="danger">{{sock.offset}}</td>
+                    <td class="danger">{{sock.process_id}}</td>
+                    <td class="danger">{{sock.local_address}}</td>
+                    <td class="danger">{{sock.local_port}}</td>
+                    <td class="danger">{{sock.remote_address}}</td>
+                    <td class="danger">{{sock.remote_port}}</td>
+                    <td class="danger">{{sock.protocol}}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% for sock in analysis.memory.netscan.data %}
+                <tr>
+                    <td>{{sock.offset}}</td>
+                    <td>{{sock.process_id}}</td>
+                    <td>{{sock.local_address}}</td>
+                    <td>{{sock.local_port}}</td>
+                    <td>{{sock.remote_address}}</td>
+                    <td>{{sock.remote_port}}</td>
+                    <td>{{sock.protocol}}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
     </tbody>
 </table>

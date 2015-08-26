@@ -7,18 +7,70 @@
         </tr>
     </thead>
     <tbody>
-    {% for service in analysis.memory.devicetree.data %}
-        <tr>
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="3">Analysis vs. Baseline</th>
+      	</tr>
+        {% for service in analysis.memory.devicetree.data %}
+  		    <tr>
+              {% if service in baseline.devicetree.data %}
+                  <td class="active">{{service.driver_name}}</td>
+                  <td class="active"><span class="mono">{{service.driver_offset}}</span></td>
+                  <td class="active">
+                    {% for device in service.devices %}
+                        {% if device.device_name %}
+                            {{device.device_name}},
+                        {% endif %}
+                    {% endfor %}
+                  </td>
+              {% else %}
+                  <td class="success">{{service.driver_name}}</td>
+                  <td class="success"><span class="mono">{{service.driver_offset}}</span></td>
+                  <td class="success">
+                    {% for device in service.devices %}
+                        {% if device.device_name %}
+                            {{device.device_name}},
+                        {% endif %}
+                    {% endfor %}
+                  </td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="3">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for service in baseline.devicetree.data %}
+      		<tr>
+              {% if not service in analysis.memory.devicetree.data %}
+                <td class="danger">{{service.driver_name}}</td>
+                <td class="danger"><span class="mono">{{service.driver_offset}}</span></td>
+                <td class="danger">
+                  {% for device in service.devices %}
+                      {% if device.device_name %}
+                          {{device.device_name}},
+                      {% endif %}
+                  {% endfor %}
+                </td>
+    	        {% endif %}
+          </tr>
+      	{% endfor %}
+      {% else %}
+        {% for service in analysis.memory.devicetree.data %}
+          <tr>
             <td>{{service.driver_name}}</td>
             <td><span class="mono">{{service.driver_offset}}</span></td>
             <td>
-            {% for device in service.devices %}
-                {% if device.device_name %}
-                    {{device.device_name}}, 
-                {% endif %}
-            {% endfor %}
+              {% for device in service.devices %}
+                  {% if device.device_name %}
+                      {{device.device_name}},
+                  {% endif %}
+              {% endfor %}
             </td>
-        </tr>
-    {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

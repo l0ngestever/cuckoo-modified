@@ -3,7 +3,7 @@
 </div>
 <div class="tabbable tabs">
     <ul class="nav nav-pills" style="margin-bottom: 0;">
-        <li class="active"><a href="#memory_pslist" data-toggle="tab">Process List</a></li>
+        <li class="active"><a href="#memory_pslist" data-toggle="tab">PSList</a></li>
         <li><a href="#memory_svcscan" data-toggle="tab">Services</a></li>
         <li><a href="#memory_modscan" data-toggle="tab">Kernel Modules</a></li>
         <li><a href="#memory_devicetree" data-toggle="tab">Device Tree</a></li>
@@ -16,9 +16,7 @@
         <li><a href="#memory_ssdt" data-toggle="tab">SSDT</a></li>
         <li><a href="#memory_idt" data-toggle="tab">IDT</a></li>
         <li><a href="#memory_gdt" data-toggle="tab">GDT</a></li>
-        {% if analysis.memory.sockscan or analysis.memory.netscan %}
         <li><a href="#memory_sockets" data-toggle="tab">Sockets</a></li>
-        {% endif %}
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade in active" id="memory_pslist">
@@ -60,14 +58,8 @@
         <div class="tab-pane fade in" id="memory_callbacks">
             {% include "analysis/memory/_callbacks.html" %}
         </div>
-        {% if analysis.memory.sockscan %}
         <div class="tab-pane fade in" id="memory_sockets">
             {% include "analysis/memory/_sockscan.html" %}
         </div>
-        {% elif analysis.memory.netscan %}
-        <div class="tab-pane fade in" id="memory_sockets">
-            {% include "analysis/memory/_netscan.html" %}
-        </div>
-        {% endif %}
     </div>
 </div>

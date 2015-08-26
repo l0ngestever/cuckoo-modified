@@ -1,3 +1,9 @@
+{% if not baseline %}
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Baseline:</strong> Create baseline with './utils/baseline.py' to compare the malware memory dump and the analysis memory dump.
+  </div>
+{% endif %}
 <table class="table table-bordered" style="table-layout: fixed;">
     <thead>
         <tr>
@@ -12,8 +18,55 @@
         </tr>
     </thead>
     <tbody>
-    {% for process in analysis.memory.pslist.data %}
-        <tr>
+      {% if baseline %}
+      	<tr>
+      		<th class="info" colspan="8">Analysis vs. Baseline</th>
+      	</tr>
+        {% for process in analysis.memory.pslist.data %}
+  		    <tr>
+              {% if process in baseline.pslist.data %}
+                  <td class="active">{{process.parent_id}}</td>
+                  <td class="active">{{process.process_id}}</td>
+                  <td class="active">{{process.process_name}}</td>
+                  <td class="active">{{process.create_time}}</td>
+                  <td class="active">{{process.exit_time}}</td>
+                  <td class="active">{{process.num_threads}}</td>
+                  <td class="active">{{process.num_handles}}</td>
+                  <td class="active">{{process.session_id}}</td>
+              {% else %}
+                  <td class="success">{{process.parent_id}}</td>
+                  <td class="success">{{process.process_id}}</td>
+                  <td class="success">{{process.process_name}}</td>
+                  <td class="success">{{process.create_time}}</td>
+                  <td class="success">{{process.exit_time}}</td>
+                  <td class="success">{{process.num_threads}}</td>
+                  <td class="success">{{process.num_handles}}</td>
+                  <td class="success">{{process.session_id}}</td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+      		<th class="info" colspan="8">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for process in baseline.pslist.data %}
+      		<tr>
+              {% if not process in analysis.memory.pslist.data %}
+                  <td class="danger">{{process.parent_id}}</td>
+                  <td class="danger">{{process.process_id}}</td>
+                  <td class="danger">{{process.process_name}}</td>
+                  <td class="danger">{{process.create_time}}</td>
+                  <td class="danger">{{process.exit_time}}</td>
+                  <td class="danger">{{process.num_threads}}</td>
+                  <td class="danger">{{process.num_handles}}</td>
+                  <td class="danger">{{process.session_id}}</td>
+    	        {% endif %}
+          </tr>
+      	{% endfor %}
+      {% else %}
+        {% for process in analysis.memory.pslist.data %}
+          <tr>
             <td>{{process.parent_id}}</td>
             <td>{{process.process_id}}</td>
             <td>{{process.process_name}}</td>
@@ -22,7 +75,9 @@
             <td>{{process.num_threads}}</td>
             <td>{{process.num_handles}}</td>
             <td>{{process.session_id}}</td>
-        </tr>
-    {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

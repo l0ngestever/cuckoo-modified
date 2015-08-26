@@ -1,24 +1,67 @@
 <table class="table table-bordered" style="table-layout: fixed;">
     <thead>
         <tr>
-            <th>Offset</th>
-            <th>PID</th>
-            <th>Local Address</th>
-            <th>Local Port</th>
-            <th>Protocol</th>
-            <th>Creation Time</th>
+          <th>Offset</th>
+          <th>Process ID</th>
+          <th>Address</th>
+          <th>Port</th>
+          <th>Protocol</th>
+          <th>Create time</th>
         </tr>
     </thead>
     <tbody>
-    {% for sock in analysis.memory.sockscan.data %}
-        <tr>
-            <td>{{sock.offset}}</td>
-            <td>{{sock.process_id}}</td>
-            <td>{{sock.address}}</td>
-            <td>{{sock.port}}</td>
-            <td>{{sock.protocol}}</td>
-            <td>{{sock.create_time}}</td>
-        </tr>
-    {% endfor %}
+      {% if baseline %}
+      	<tr>
+          <th class="info" colspan="6">Analysis vs. Baseline</th>
+      	</tr>
+        {% for p in analysis.memory.sockscan.data %}
+  		    <tr>
+              {% if p in baseline.sockscan.data %}
+                  <td class="active">{{p.offset}}</td>
+                  <td class="active">{{p.process_id}}</td>
+                  <td class="active">{{p.address}}</td>
+                  <td class="active">{{p.port}}</td>
+                  <td class="active">{{p.protocol}}</td>
+                  <td class="active">{{p.create_time}}</td>
+              {% else %}
+                  <td class="success">{{p.offset}}</td>
+                  <td class="success">{{p.process_id}}</td>
+                  <td class="success">{{p.address}}</td>
+                  <td class="success">{{p.port}}</td>
+                  <td class="success">{{p.protocol}}</td>
+                  <td class="success">{{p.create_time}}</td>
+    	        {% endif %}
+          </tr>
+	       {% endfor %}
+
+      	<tr>
+          <th class="info" colspan="6">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for p in baseline.sockscan.data %}
+            {% if not p in analysis.memory.sockscan.data %}
+            	<tr>
+                <td class="danger">{{p.offset}}</td>
+                <td class="danger">{{p.process_id}}</td>
+                <td class="danger">{{p.address}}</td>
+                <td class="danger">{{p.port}}</td>
+                <td class="danger">{{p.protocol}}</td>
+                <td class="danger">{{p.create_time}}</td>
+              </tr>
+  	        {% endif %}
+      	{% endfor %}
+      {% else %}
+        {% for p in analysis.memory.sockscan.data %}
+          <tr>
+            <td>{{p.offset}}</td>
+            <td>{{p.process_id}}</td>
+            <td>{{p.address}}</td>
+            <td>{{p.port}}</td>
+            <td>{{p.protocol}}</td>
+            <td>{{p.create_time}}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
+

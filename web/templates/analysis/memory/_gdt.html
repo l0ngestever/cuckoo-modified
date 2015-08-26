@@ -12,17 +12,64 @@
         </tr>
     </thead>
     <tbody>
-    {% for x in analysis.memory.gdt.data %}
+    {% if baseline %}
         <tr>
-            <td>{{x.cpu_number}}</td>
-            <td><span class="mono">{{x.selector}}</span></td>
-            <td><span class="mono">{{x.base}}</span></td>
-            <td><span class="mono">{{x.limit}}</span></td>
-            <td>{{x.type}}</td>
-            <td>{{x.dpl}}</td>
-            <td>{{x.granularity}}</td>
-            <td>{{x.present}}</td>
-        </tr>
-    {% endfor %}
+            <th class="info" colspan="8">Analysis vs. Baseline</th>
+      	</tr>
+        {% for x in analysis.memory.gdt.data %}
+            <tr>
+                {% if x in baseline.gdt.data %}
+                    <td class="active">{{x.cpu_number}}</td>
+                    <td class="active"><span class="mono">{{x.selector}}</span></td>
+                    <td class="active"><span class="mono">{{x.base}}</span></td>
+                    <td class="active"><span class="mono">{{x.limit}}</span></td>
+                    <td class="active">{{x.type}}</td>
+                    <td class="active">{{x.dpl}}</td>
+                    <td class="active">{{x.granularity}}</td>
+                    <td class="active">{{x.present}}</td>
+                {% else %}
+                    <td class="success">{{x.cpu_number}}</td>
+                    <td class="success"><span class="mono">{{x.selector}}</span></td>
+                    <td class="success"><span class="mono">{{x.base}}</span></td>
+                    <td class="success"><span class="mono">{{x.limit}}</span></td>
+                    <td class="success">{{x.type}}</td>
+                    <td class="success">{{x.dpl}}</td>
+                    <td class="success">{{x.granularity}}</td>
+                    <td class="success">{{x.present}}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        <tr>
+      		<th class="info" colspan="8">Baseline vs. Analysis</th>
+      	</tr>
+
+        {% for x in baseline.gdt.data %}
+              {% if not x in analysis.memory.gdt.data %}
+                  <tr>
+                    <td class="danger">{{x.cpu_number}}</td>
+                    <td class="danger"><span class="mono">{{x.selector}}</span></td>
+                    <td class="danger"><span class="mono">{{x.base}}</span></td>
+                    <td class="danger"><span class="mono">{{x.limit}}</span></td>
+                    <td class="danger">{{x.type}}</td>
+                    <td class="danger">{{x.dpl}}</td>
+                    <td class="danger">{{x.granularity}}</td>
+                    <td class="danger">{{x.present}}</td>
+                  </tr>
+    	        {% endif %}
+      	{% endfor %}
+    {% else %}
+        {% for x in analysis.memory.gdt.data %}
+          <tr>
+                <td>{{x.cpu_number}}</td>
+                <td><span class="mono">{{x.selector}}</span></td>
+                <td><span class="mono">{{x.base}}</span></td>
+                <td><span class="mono">{{x.limit}}</span></td>
+                <td>{{x.type}}</td>
+                <td>{{x.dpl}}</td>
+                <td>{{x.granularity}}</td>
+                <td>{{x.present}}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>

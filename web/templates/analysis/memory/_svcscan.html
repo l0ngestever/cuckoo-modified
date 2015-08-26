@@ -12,7 +12,52 @@
         </tr>
     </thead>
     <tbody>
+    {% if baseline %}
+    <tr>
+        <th class="info" colspan="8">Analysis vs. Baseline</th>
+    </tr>
     {% for service in analysis.memory.svcscan.data %}
+        <tr>
+            {% if service in baseline.svcscan.data %}
+                <td class="active">{{service.service_name}}</td>
+                <td class="active">{{service.service_display_name}}</td>
+                <td class="active">{{service.service_binary_path}}</td>
+                <td class="active">{{service.pricess_id}}</td>
+                <td class="active">{{service.service_type}}</td>
+                <td class="active">{{service.service_order}}</td>
+                <td class="active"><span class="mono">{{service.service_offset}}</span></td>
+                <td class="active">{{service.service_state}}</td>
+            {% else %}
+                <td class="success">{{service.service_name}}</td>
+                <td class="success">{{service.service_display_name}}</td>
+                <td class="success">{{service.service_binary_path}}</td>
+                <td class="success">{{service.pricess_id}}</td>
+                <td class="success">{{service.service_type}}</td>
+                <td class="success">{{service.service_order}}</td>
+                <td class="success"><span class="mono">{{service.service_offset}}</span></td>
+                <td class="success">{{service.service_state}}</td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    <tr>
+        <th class="info" colspan="8">Baseline vs. Analysis</th>
+    </tr>
+    {% for service in baseline.svcscan.data %}
+            {% if not service in analysis.memory.svcscan.data %}
+            <tr>
+                <td class="active">{{service.service_name}}</td>
+                <td class="active">{{service.service_display_name}}</td>
+                <td class="active">{{service.service_binary_path}}</td>
+                <td class="active">{{service.pricess_id}}</td>
+                <td class="active">{{service.service_type}}</td>
+                <td class="active">{{service.service_order}}</td>
+                <td class="active"><span class="mono">{{service.service_offset}}</span></td>
+                <td class="active">{{service.service_state}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% for service in analysis.memory.svcscan.data %}
         <tr>
             <td>{{service.service_name}}</td>
             <td>{{service.service_display_name}}</td>
@@ -23,6 +68,7 @@
             <td><span class="mono">{{service.service_offset}}</span></td>
             <td>{{service.service_state}}</td>
         </tr>
-    {% endfor %}
+        {% endfor %}
+      {% endif %}
     </tbody>
 </table>
